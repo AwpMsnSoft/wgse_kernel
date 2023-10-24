@@ -1,0 +1,86 @@
+name: ci_local
+
+on:
+  push:
+    branches: ["master", "release/**"]
+  pull_request:
+  merge_group:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lints:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/git/db/
+            ~/.cargo/registry/cache/
+            ~/.cargo/registry/index/
+            target/
+          key: ${{runner.os}}-cargo-ci-${{hashFiles("**/Cargo.toml")}}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: ci
+        run: cargo run -p ci -- lints
+      - name: ci (release)
+        run: cargo run -r -p ci -- lints
+
+  compile:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{matrix.os}}
+    timeout-minutes: 60
+    needs: lints
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/git/db/
+            ~/.cargo/registry/cache/
+            ~/.cargo/registry/index/
+            target/
+          key: ${{runner.os}}-cargo-compile-${{hasnFiles("**/Cargo.toml")}}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - name: compile
+        run: cargo run -p ci -- compile
+      - name: compile (release)
+        run: cargo run -r -p ci -- compile
+
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{matrix.os}}
+    timeout-minutes: 30
+    needs: lints
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/git/db/
+            ~/.cargo/registry/cache/
+            ~/.cargo/registry/index/
+            target/
+          key: ${{runner.os}}-cargo-build-stable-${{hashFiles("**/Cargo.toml")}}
+      - uses: dtolnay/rust-toolchain@stable
+      - name: test
+        run: cargo run -p ci -- test
+        env:
+          CARGO_INCREMENTAL: 0
+          RUSTFLAGS: "-C debuginfo=0 -D warnings"
+      - name: test (release)
+        run: cargo run -r -p ci -- test

@@ -1,0 +1,34 @@
+name: ci_local
+
+on:
+  push:
+    branches: ["master", "release/**"]
+  pull_request:
+  merge_group:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/git/db/
+            ~/.cargo/registry/cache/
+            ~/.cargo/registry/index/
+            target/
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: wasm32-unknown-unknown
+      - name: wasm compile
+        run: cargo check --target wasm32-unknown-unknown
+        env:
+          RUSTFLAGS: --cfg=web_sys_ubstable_apis
+      - name: wasm compile (release)
+        run: cargo check -r --target wasm32-unknown-unknown
