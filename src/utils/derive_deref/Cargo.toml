@@ -1,8 +1,14 @@
 [package]
 name = "derive_deref"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+authors = ["AWP_MSN_SOFT <awpmsnsoft-wgse@msneko.icu>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+proc-macro = true
 
 [dependencies]
+anyhow = "1.0.75"
+proc-macro2 = "1.0.69"
+quote = "1.0.33"
+syn = { version = "2.0.38", features = ["full"] }
