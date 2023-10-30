@@ -2,7 +2,7 @@
 name = "derive_deref"
 version = "1.0.0"
 edition = "2021"
-authors = ["AWP_MSN_SOFT <awpmsnsoft-wgse@msneko.icu>"]
+authors = ["AWP_MCN_COFT <awpmcncoft-wgse@msneko.icu>"]
 
 [lib]
 proc-macro = true

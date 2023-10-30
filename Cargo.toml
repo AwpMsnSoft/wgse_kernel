@@ -20,3 +20,4 @@ derive_deref = { path = "./src/utils/derive_deref" }
 enum_dispatch = "0.3.12"
 function_name = "0.3.0"
 leb128 = "0.2.5"
+meta_collect = { path = "./src/utils/meta_collect" }
