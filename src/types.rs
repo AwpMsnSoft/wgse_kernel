@@ -1,3 +1,4 @@
+use crate::errors::{inconsistent_type_err, InconsistentTypeError};
 use anyhow::{anyhow, Result};
 use binrw::{
     binrw, io as binio, BinRead, BinResult, BinWrite, Endian as BinEndian, Error as BinError,
@@ -5,6 +6,7 @@ use binrw::{
 };
 use derive_deref::{Deref, DerefMut};
 use enum_dispatch::enum_dispatch;
+use function_name::named;
 use leb128::{
     read::{self as sleb128, signed as sleb128_read},
     write::signed as sleb128_write,
@@ -232,27 +234,29 @@ pub mod common {
 
     #[enum_dispatch]
     pub trait TryDerefTo {
+        #[named]
         fn try_to_integer(&self) -> Result<i64> {
-            Err(anyhow!(
-                "inconsistent type. expect [Integer], found [{}]",
+            Err(inconsistent_type_err!(
+                type_name::<Integer>(),
                 type_name::<Self>()
             ))
         }
 
+        #[named]
         fn try_to_real(&self) -> Result<f64> {
-            Err(anyhow!(
-                "inconsistent type. expect [Real], found [{}]",
+            Err(inconsistent_type_err!(
+                type_name::<Real>(),
                 type_name::<Self>()
             ))
         }
 
+        #[named]
         fn try_to_handle<T>(&self) -> Result<Handle<T>>
         where
             T: for<'a> BinRead<Args<'a> = ()> + for<'a> BinWrite<Args<'a> = ()> + Default,
         {
-            Err(anyhow!(
-                "inconsistent type. expect [Handle<{}>], found [{}]",
-                type_name::<T>(),
+            Err(inconsistent_type_err!(
+                type_name::<Handle::<T>>(),
                 type_name::<Self>()
             ))
         }
