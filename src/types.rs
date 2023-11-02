@@ -194,6 +194,7 @@ pub mod common {
         }
     }
 
+    #[cfg(debug_assertions)]
     #[binrw]
     #[brw(little)]
     #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -202,8 +203,20 @@ pub mod common {
         T: for<'a> BinRead<Args<'a> = ()> + for<'a> BinWrite<Args<'a> = ()> + Default,
     {
         pub address: u32,
-        #[cfg(debug_assertions)]
         pub type_info: NullString,
+        #[brw(ignore)]
+        phantom: PhantomData<T>,
+    }
+
+    #[cfg(not(debug_assertions))]
+    #[binrw]
+    #[brw(little)]
+    #[derive(Clone, Debug, Default, PartialEq, Eq)]
+    pub struct Handle<T>
+    where
+        T: for<'a> BinRead<Args<'a> = ()> + for<'a> BinWrite<Args<'a> = ()> + Default,
+    {
+        pub address: u32,
         #[brw(ignore)]
         phantom: PhantomData<T>,
     }
@@ -212,11 +225,19 @@ pub mod common {
     where
         T: for<'a> BinRead<Args<'a> = ()> + for<'a> BinWrite<Args<'a> = ()> + Default,
     {
+        #[cfg(debug_assertions)]
         fn new(addr: u32) -> Self {
             Self {
                 address: addr,
-                #[cfg(debug_assertions)]
                 type_info: type_name::<Handle<T>>().into(),
+                ..Default::default()
+            }
+        }
+
+        #[cfg(not(debug_assertions))]
+        fn new(addr: u32) -> Self {
+            Self {
+                address: addr,
                 ..Default::default()
             }
         }
