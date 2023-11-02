@@ -8,6 +8,9 @@ license = "MIT OR Apache-2.0"
 readme = true
 publish = false
 
+[workspace]
+members = ["tools/ci"]
+
 [lib]
 name = "wgse_kernel"
 path = "src/lib.rs"

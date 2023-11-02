@@ -1,0 +1,11 @@
+[package]
+name = "ci"
+version = "1.0.0"
+edition = "2021"
+description = "ci script for wgse_kernel"
+publish = false
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+xshell = "0.2"
+bitflags = "2.3"
