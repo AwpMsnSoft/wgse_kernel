@@ -53,7 +53,7 @@ fn deref_member(ast: &DeriveInput) -> Result<(Member, Type)> {
         let field = data
             .fields
             .iter()
-            .nth(0)
+            .next()
             .ok_or(compile_err!("cannot apply `derive_deref` on empty struct."))?;
         let member = field
             .ident

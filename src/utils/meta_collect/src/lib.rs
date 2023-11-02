@@ -11,7 +11,7 @@ use syn::{parse_macro_input, ItemFn};
 /// auto-implemention.
 ///
 /// # Notes
-/// This macro is ONLY used for the 'meta_collect' feature, otherwise a compilation error will occur.
+/// This macro is ONLY used for the '`meta_collect`' feature, otherwise a compilation error will occur.
 ///
 /// # Example
 /// ```
