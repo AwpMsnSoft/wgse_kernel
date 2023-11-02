@@ -1,0 +1,14 @@
+[package]
+name = "derive_deref"
+version = "1.0.0"
+edition = "2021"
+authors = ["AWP_MCN_COFT <awpmcncoft-wgse@msneko.icu>"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+anyhow = "1.0.75"
+proc-macro2 = "1.0.69"
+quote = "1.0.33"
+syn = { version = "2.0.38", features = ["full"] }
