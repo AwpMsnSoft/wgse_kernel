@@ -2,7 +2,23 @@
 name = "wgse_kernel"
 version = "0.1.0"
 edition = "2021"
+build = "build.rs"
+authors = ["AWP_MCN_COFT <awpmcncoft-wgse@msneko.icu>"]
+license = "MIT OR Apache-2.0"
+readme = true
+publish = false
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "wgse_kernel"
+path = "src/lib.rs"
+crate-type = ["staticlib"]
 
 [dependencies]
+anyhow = "1.0.75"
+binrw = "0.13.0"
+derive_deref = { path = "./src/utils/derive_deref" }
+enum_dispatch = "0.3.12"
+function_name = "0.3.0"
+leb128 = "0.2.5"
+meta_collect = { path = "./src/utils/meta_collect" }
+meta_gen = { path = "./src/utils/meta_gen" }
