@@ -49,7 +49,7 @@ pub trait ToSynResult<T> {
 
 impl<T> ToSynResult<T> for AnyResult<T> {
     fn to_syn_result(self) -> Result<T> {
-        self.or_else(|err| Err(compile_err!(format!("{:?}", err))))
+        self.map_err(|err| compile_err!(format!("{:?}", err)))
     }
 }
 
@@ -90,7 +90,7 @@ pub fn wgse_command_impl(args: MetaCollectArgs, ast: &mut ItemFn) -> AnyResult<(
         args.name.to_case(Case::Snake)
     );
     let project_dir = env::current_dir()?;
-    let file_path = Path::new(&project_dir).join(&file_name);
+    let file_path = Path::new(&project_dir).join(file_name);
 
     let mut ast_clone = ast.clone();
     check_function_interface(&mut ast_clone)?;
@@ -141,7 +141,7 @@ fn check_function_interface(ast: &mut ItemFn) -> AnyResult<()> {
             ))?;
     let func_signature = quote! { #(func.sig.clone()) }.to_string();
 
-    let _ = if interface_signature == func_signature {
+    if interface_signature == func_signature {
         Ok(())
     } else {
         Err(InvalidInterfaceError::new(
@@ -166,6 +166,6 @@ fn get_json_payload(path: &Path) -> AnyResult<Value> {
 fn set_json_payload(path: &Path, mut json_value: Value) -> AnyResult<()> {
     json_value["raw"] =
         Value::String(general_purpose::STANDARD.encode(json_value["raw"].as_str().unwrap()));
-    BufWriter::new(File::create(path)?).write(json_value.to_string().as_bytes())?;
+    BufWriter::new(File::create(path)?).write_all(json_value.to_string().as_bytes())?;
     Ok(())
 }

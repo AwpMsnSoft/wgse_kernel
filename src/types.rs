@@ -1,3 +1,5 @@
+#![allow(unused_macros)]
+
 use crate::errors::{inconsistent_type_err, InconsistentTypeError};
 use anyhow::{anyhow, Result};
 use binrw::{
@@ -100,20 +102,16 @@ pub mod common {
             _args: Self::Args<'_>,
         ) -> BinResult<Self> {
             match endian {
-                BinEndian::Little => {
-                    sleb128_read(reader)
-                        .and_then(|val| Ok(Self(val)))
-                        .or_else(|err| match err {
-                            sleb128::Error::IoError(err) => Err(BinError::Io(binio::Error::new(
-                                binio::ErrorKind::InvalidData,
-                                format!("{:?}", err),
-                            ))),
-                            sleb128::Error::Overflow => Err(BinError::Io(binio::Error::new(
-                                binio::ErrorKind::InvalidData,
-                                "the number being read is larger than can be represented",
-                            ))),
-                        })
-                }
+                BinEndian::Little => sleb128_read(reader).map(Self).map_err(|err| match err {
+                    sleb128::Error::IoError(err) => BinError::Io(binio::Error::new(
+                        binio::ErrorKind::InvalidData,
+                        format!("{:?}", err),
+                    )),
+                    sleb128::Error::Overflow => BinError::Io(binio::Error::new(
+                        binio::ErrorKind::InvalidData,
+                        "the number being read is larger than can be represented",
+                    )),
+                }),
                 BinEndian::Big => Err(BinError::Io(binio::Error::new(
                     binio::ErrorKind::InvalidInput,
                     "leb_128 can ONLY be little endian",
@@ -176,15 +174,15 @@ pub mod common {
                             ),
                         ))),
                     })
-                    .or_else(|err| match err {
-                        sleb128::Error::IoError(err) => Err(BinError::Io(binio::Error::new(
+                    .map_err(|err| match err {
+                        sleb128::Error::IoError(err) => BinError::Io(binio::Error::new(
                             binio::ErrorKind::InvalidData,
                             format!("{:?}", err),
-                        ))),
-                        sleb128::Error::Overflow => Err(BinError::Io(binio::Error::new(
+                        )),
+                        sleb128::Error::Overflow => BinError::Io(binio::Error::new(
                             binio::ErrorKind::InvalidData,
                             "the number being read is larger than can be represented",
-                        ))),
+                        )),
                     }),
                 BinEndian::Big => Err(BinError::Io(binio::Error::new(
                     binio::ErrorKind::InvalidInput,

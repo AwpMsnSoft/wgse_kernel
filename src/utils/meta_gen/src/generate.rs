@@ -29,7 +29,7 @@ pub trait ToSynResult<T> {
 
 impl<T> ToSynResult<T> for AnyResult<T> {
     fn to_syn_result(self) -> Result<T> {
-        self.or_else(|err| Err(compile_err!(format!("{:?}", err))))
+        self.map_err(|err| compile_err!(format!("{:?}", err)))
     }
 }
 
@@ -156,6 +156,6 @@ fn get_json_payload(path: &Path) -> AnyResult<Value> {
 fn set_json_payload(path: &Path, mut json_value: Value) -> AnyResult<()> {
     json_value["raw"] =
         Value::String(general_purpose::STANDARD.encode(json_value["raw"].as_str().unwrap()));
-    BufWriter::new(File::create(path)?).write(json_value.to_string().as_bytes())?;
+    BufWriter::new(File::create(path)?).write_all(json_value.to_string().as_bytes())?;
     Ok(())
 }
