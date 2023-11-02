@@ -1,2 +1,8 @@
 /Cargo.lock
 /target
+/src/utils/derive_deref/Cargo.lock
+/src/utils/derive_deref/target
+/src/utils/meta_collect/Cargo.lock
+/src/utils/meta_collect/target
+/src/utils/meta_gen/Cargo.lock
+/src/utils/meta_gen/target
