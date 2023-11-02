@@ -1,4 +1,4 @@
-name: ci_local
+name: ci_wasm
 
 on:
   push:
