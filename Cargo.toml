@@ -14,7 +14,7 @@ members = ["tools/ci"]
 [lib]
 name = "wgse_kernel"
 path = "src/lib.rs"
-crate-type = ["staticlib"]
+crate-type = ["lib"]
 
 [dependencies]
 anyhow = "1.0.75"
