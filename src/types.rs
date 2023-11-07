@@ -6,7 +6,6 @@ use binrw::{
     binrw, io as binio, BinRead, BinResult, BinWrite, Endian as BinEndian, Error as BinError,
     NullString,
 };
-use derive_deref::{Deref, DerefMut};
 use enum_dispatch::enum_dispatch;
 use function_name::named;
 use leb128::{
@@ -19,6 +18,7 @@ use std::{
     marker::PhantomData,
     num::NonZeroU32,
 };
+use wgse_utils::{Deref, DerefMut};
 
 pub mod wrapper {
     use super::*;
