@@ -19,9 +19,7 @@ crate-type = ["lib"]
 [dependencies]
 anyhow = "1.0.75"
 binrw = "0.13.0"
-derive_deref = { path = "./src/utils/derive_deref" }
 enum_dispatch = "0.3.12"
 function_name = "0.3.0"
 leb128 = "0.2.5"
-meta_collect = { path = "./src/utils/meta_collect" }
-meta_gen = { path = "./src/utils/meta_gen" }
+wgse_utils = { git = "https://github.com/AwpMsnSoft/wgse_utils" }

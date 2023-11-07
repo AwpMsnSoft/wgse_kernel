@@ -1,3 +1,3 @@
 # Wgse Kernel
 
-A collection of Wgs Engine develop utils and common types.
+A collection of Wgs Engine common types.
