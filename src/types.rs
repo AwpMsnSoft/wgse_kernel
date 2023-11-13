@@ -69,7 +69,7 @@ pub mod common {
     use super::*;
 
     #[derive(Copy, Clone, Debug, Default, Deref, DerefMut, PartialEq, Eq, PartialOrd, Ord)]
-    pub struct Integer(i64);
+    pub struct Integer(pub i64);
 
     impl BinWrite for Integer {
         type Args<'a> = ();
@@ -123,10 +123,10 @@ pub mod common {
     #[binrw]
     #[brw(little)]
     #[derive(Copy, Clone, Debug, Default, Deref, DerefMut, PartialEq, PartialOrd)]
-    pub struct Real(f64);
+    pub struct Real(pub f64);
 
     #[derive(Copy, Clone, Debug, Deref, DerefMut, PartialEq, Eq, PartialOrd, Ord)]
-    pub struct Address(NonZeroU32);
+    pub struct Address(pub NonZeroU32);
 
     impl BinWrite for Address {
         type Args<'a> = ();
